@@ -1,6 +1,8 @@
 import inspect
 import json
 
+from mini_asgi.router import ApiRouter
+
 class MiniASGI:
     def __init__(self):
         self.routes = {}
@@ -16,6 +18,30 @@ class MiniASGI:
             self.routes[("POST", path)] = func
             return func
         return decorator
+    
+    def put(self, path):
+        def decorator(func):
+            self.routes[("PUT", path)] = func
+            return func
+        return decorator
+    
+    def delete(self, path):
+        def decorator(func):
+            self.routes[("DELETE", path)] = func
+            return func
+        return decorator
+    
+    def patch(self, path):
+        def decorator(func):
+            self.routes[("PATCH", path)] = func
+            return func
+        return decorator
+    
+    def include_router(self, router : ApiRouter):
+        for (method, path), func in router.routes.items():
+            if (method, path) in self.routes:
+                raise ValueError(f"Route {method} {path} already exists in the main app.")
+            self.routes[(method, path)] = func
 
     async def __call__(self, scope, receive, send):
         path = scope['path']

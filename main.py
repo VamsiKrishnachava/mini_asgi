@@ -7,5 +7,5 @@ def hello():
     return {"message": "Hello, World!"}
 
 @app.get("/")
-def root():
+async def root():
     return {"message": "Welcome to the app made using MiniASGI framework!"}
