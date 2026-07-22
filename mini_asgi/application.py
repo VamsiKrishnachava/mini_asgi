@@ -2,11 +2,8 @@ import inspect
 import json
 
 from mini_asgi.router import ApiRouter
-<<<<<<< HEAD
 from mini_asgi.models.request import Request
 from mini_asgi.models.route import Route
-=======
->>>>>>> main
 
 class MiniASGI:
     def __init__(self):
