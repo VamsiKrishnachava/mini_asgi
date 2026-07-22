@@ -8,5 +8,5 @@ def hello():
     return {"message": "Hello, World!"}
 
 @app.get("/")
-def root(request : Request, no:Request):
+def root(request : Request):
     return {"message": "Welcome to the app made using MiniASGI framework! the method used is: " + request.method + " and the path is: " + request.path}

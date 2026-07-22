@@ -48,21 +48,25 @@ class MiniASGI:
     async def __call__(self, scope, receive, send):
         path = scope['path']
         method = scope['method'].upper()
-        function = self.routes.get((method, path))
-        if function:
-            requestParameter = self.routes.get((method, path)).expectedRequestParameter
-            result = await self._call_function(function, scope, requestParameter)
-            # Convert the result to JSON and send the response. We assume the result is a dictionary.
-            if not isinstance(result, dict):
-                result = {"result": result}
-            response_body = json.dumps(result).encode('utf-8')
-            await self._send_header_helper(200, [(b'content-type', b'application/json')], send)
-            await self._send_body_helper(response_body, send)
-        else:
+        route = self.routes.get((method, path))
+        if not route:
             await self._send_header_helper(404, [(b'content-type', b'text/plain')], send)
             await self._send_body_helper(b"Route not found", send)
+            return
 
-# --------------- Helper methods to send headers and body ---------------
+        function = route.func
+        requestParameter = route.expectedRequestParameter
+        result = await self._call_function(function, scope, requestParameter)
+        # Convert the result to JSON and send the response. We assume the result is a dictionary.
+        if not isinstance(result, dict):
+            result = {"result": result}
+        response_body = json.dumps(result).encode('utf-8')
+        await self._send_header_helper(200, [(b'content-type', b'application/json')], send)
+        await self._send_body_helper(response_body, send)
+
+
+
+# --------------- Helper methods ---------------
     async def _call_function(self, function, scope, requestParameter=None):
         expectedRequestParameter = requestParameter.name if requestParameter else None
         
