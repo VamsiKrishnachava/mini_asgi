@@ -1,4 +1,5 @@
 from mini_asgi.application import MiniASGI
+from mini_asgi.models.request import Request
 
 app = MiniASGI()
 
@@ -7,5 +8,5 @@ def hello():
     return {"message": "Hello, World!"}
 
 @app.get("/")
-def root():
-    return {"message": "Welcome to the app made using MiniASGI framework!"}
+def root(request : Request):
+    return {"message": "Welcome to the app made using MiniASGI framework! the method used is: " + request.method + " and the path is: " + request.path}
