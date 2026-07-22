@@ -2,8 +2,11 @@ import inspect
 import json
 
 from mini_asgi.router import ApiRouter
+<<<<<<< HEAD
 from mini_asgi.models.request import Request
 from mini_asgi.models.route import Route
+=======
+>>>>>>> main
 
 class MiniASGI:
     def __init__(self):
@@ -23,19 +26,31 @@ class MiniASGI:
     
     def put(self, path):
         def decorator(func):
+<<<<<<< HEAD
             self.routes[("PUT", path)] = Route("PUT", path, func)
+=======
+            self.routes[("PUT", path)] = func
+>>>>>>> main
             return func
         return decorator
     
     def delete(self, path):
         def decorator(func):
+<<<<<<< HEAD
             self.routes[("DELETE", path)] = Route("DELETE", path, func)
+=======
+            self.routes[("DELETE", path)] = func
+>>>>>>> main
             return func
         return decorator
     
     def patch(self, path):
         def decorator(func):
+<<<<<<< HEAD
             self.routes[("PATCH", path)] = Route("PATCH", path, func)
+=======
+            self.routes[("PATCH", path)] = func
+>>>>>>> main
             return func
         return decorator
     
