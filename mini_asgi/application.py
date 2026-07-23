@@ -1,4 +1,3 @@
-import inspect
 import json
 
 from mini_asgi.router import ApiRouter
@@ -54,9 +53,7 @@ class MiniASGI:
             await self._send_body_helper(b"Route not found", send)
             return
 
-        function = route.func
-        requestParameter = route.expectedRequestParameter
-        result = await self._call_function(function, scope, requestParameter)
+        result = await self._call_function(scope, receive, route)
         # Convert the result to JSON and send the response. We assume the result is a dictionary.
         if not isinstance(result, dict):
             result = {"result": result}
@@ -67,7 +64,10 @@ class MiniASGI:
 
 
 # --------------- Helper methods ---------------
-    async def _call_function(self, function, scope, requestParameter=None):
+    async def _call_function(self, scope, receive, route = None):
+
+        function = route.func
+        requestParameter = route.expectedRequestParameter
         expectedRequestParameter = requestParameter.name if requestParameter else None
         
         # Instead of having multiple for different cases, 
@@ -75,9 +75,9 @@ class MiniASGI:
         # This way we will only have 2 path ways async and sync. 
         kwargs = {}
         if expectedRequestParameter:
-            kwargs[expectedRequestParameter] = Request(scope)
+            kwargs[expectedRequestParameter] = Request(scope, receive)
 
-        if inspect.iscoroutinefunction(function):
+        if route.isAsync:
             return await function(**kwargs)
         else: 
             return function(**kwargs)
