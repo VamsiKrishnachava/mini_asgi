@@ -10,31 +10,31 @@ class MiniASGI:
 
     def get(self, path):
         def decorator(func):
-            self.routes[("GET", path)] = Route("GET", path, func)
+            self._registerRoute(Route("GET", path, func))
             return func
         return decorator
 
     def post(self, path):
         def decorator(func):
-            self.routes[("POST", path)] = Route("POST", path, func)
+            self._registerRoute(Route("POST", path, func)) 
             return func
         return decorator
     
     def put(self, path):
         def decorator(func):
-            self.routes[("PUT", path)] = Route("PUT", path, func)
+            self._registerRoute(Route("PUT", path, func)) 
             return func
         return decorator
     
     def delete(self, path):
         def decorator(func):
-            self.routes[("DELETE", path)] = Route("DELETE", path, func)
+            self._registerRoute(Route("DELETE", path, func)) 
             return func
         return decorator
     
     def patch(self, path):
         def decorator(func):
-            self.routes[("PATCH", path)] = Route("PATCH", path, func)
+            self._registerRoute(Route("PATCH", path, func)) 
             return func
         return decorator
     
@@ -64,6 +64,13 @@ class MiniASGI:
 
 
 # --------------- Helper methods ---------------
+    def _registerRoute(self, route:Route):
+            """
+                This fucntion helps in registering a route in the app. 
+            """
+            self.routes[(route.method, route.path)] = route
+            return
+
     async def _call_function(self, scope, receive, route = None):
 
         function = route.func

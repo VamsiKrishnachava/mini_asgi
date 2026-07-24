@@ -1,4 +1,5 @@
 import json
+from urllib.parse import parse_qs
 
 class Request:
         def __init__(self, scope, receive):
@@ -6,7 +7,7 @@ class Request:
             self.method = scope['method']
             self.path = scope['path']
             self.headers = dict(scope['headers'])
-            self.query_string = scope['query_string']
+            self.query_params = parse_qs(scope['query_string'].decode('utf-8'), keep_blank_values=True)
             self._receive = receive
             self._body = None
             self._json = None
