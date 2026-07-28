@@ -6,13 +6,29 @@ class Request:
             self.scope = scope
             self.method = scope['method']
             self.path = scope['path']
-            self.headers = dict(scope['headers'])
+            self.headers = {
+                 key.decode("utf-8").lower(): value.decode("utf-8") 
+                 for key, value in scope["headers"]
+                 }
             self.query_params = parse_qs(scope['query_string'].decode('utf-8'), keep_blank_values=True)
             self._receive = receive
             self._body = None
             self._json = None
-                 
+            self.cookie = self._parse_cookie_header()
 
+        def _parse_cookie_header(self):
+            cookie_header = self.headers.get('cookie', '')
+            cookies = {}
+
+            for cookie in cookie_header.split(';'):
+                cookie = cookie.strip()
+                if not cookie or '=' not in cookie:
+                    continue
+                name, value = cookie.split('=', 1)
+                cookies[name.strip()] = value.strip()
+
+            return cookies
+             
         async def body(self) -> bytes:
             if self._body is not None:
                  return self._body

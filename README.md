@@ -39,3 +39,4 @@ The application will start on the default development server.
 - Intended for educational purposes to understand the ASGI protocol rather than production use.
 - Sync endpoints can return data but should not call request.body() or request.json().
 - If an endpoint needs to read the request body, it should be async
+- Headers are all in lower case.
