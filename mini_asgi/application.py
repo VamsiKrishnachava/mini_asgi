@@ -1,5 +1,6 @@
 import json
 
+from mini_asgi.models.response import Response
 from mini_asgi.router import ApiRouter
 from mini_asgi.models.request import Request
 from mini_asgi.models.route import Route
@@ -53,13 +54,13 @@ class MiniASGI:
             await self._send_body_helper(b"Route not found", send)
             return
 
-        result = await self._call_function(scope, receive, route)
-        # Convert the result to JSON and send the response. We assume the result is a dictionary.
-        if not isinstance(result, dict):
-            result = {"result": result}
-        response_body = json.dumps(result).encode('utf-8')
-        await self._send_header_helper(200, [(b'content-type', b'application/json')], send)
-        await self._send_body_helper(response_body, send)
+        response = await self._call_function(scope, receive, route)
+
+        if not  isinstance(response,Response):
+            raise TypeError("The response is not of type Response.")
+
+        await self._send_header_helper(response.status_code, response.headers, send)
+        await self._send_body_helper(response.body, send)
 
 
 
