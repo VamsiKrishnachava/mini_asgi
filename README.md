@@ -33,7 +33,7 @@ The application will start on the default development server.
 
 ## Current Limitations
 
-- Responses must be of type `dict`.
+- Responses must be of type Response defined in models.
 - Only basic routing is supported.
 - Only `200 OK` and `404 Not Found` responses are implemented.
 - Intended for educational purposes to understand the ASGI protocol rather than production use.
