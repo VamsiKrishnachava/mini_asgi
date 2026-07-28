@@ -1,5 +1,6 @@
 import inspect
 from mini_asgi.models.request import Request
+from mini_asgi.models.response import Response
 
 
 class Route:
@@ -38,6 +39,7 @@ class Route:
                 else:
                     raise ValueError("Function should not have more than one parameter of type Request.")
         return returnParameter
+
 
     def _isAsync(self, function):
         """ 
