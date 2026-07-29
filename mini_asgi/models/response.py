@@ -39,12 +39,12 @@ class ResponseUtils:
         returnHeaders = list(headers or [])
         if not headers is None:
             for header in headers:
-                if header.name.lower() == "content_type":
-                    if header.value.lower() == contentHeader.value.lower():
+                if header[0].lower() == b"content-type":
+                    if header[1].lower() == contentHeader.value.lower():
                         return returnHeaders
                     else:
                         raise ValueError("Content type is incorrect in headers.")
-            returnHeaders.append(contentHeader)
+        returnHeaders.append(contentHeader)
         return returnHeaders
 
 
