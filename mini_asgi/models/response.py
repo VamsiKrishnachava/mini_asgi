@@ -14,21 +14,21 @@ class JSONResponse(Response):
                  headers: list[tuple[bytes,bytes]] | None = None):
         body = json.dumps(body).encode("utf-8")
         headers = ResponseUtils.prepareHeaders(headers, (b"content-type", b"application/json"))
-        super().__init(body, status_code, headers)
+        super().__init__(body, status_code, headers)
 
 class PlainTextResponse(Response):
     def __init__(self, body : str, status_code : int = 200,
                  headers: list[tuple[bytes,bytes]] | None = None):
         body = body.encode("utf-8")
         headers = ResponseUtils.prepareHeaders(headers, (b"content-type", b"text/plain"))
-        super().__init(body, status_code, headers)
+        super().__init__(body, status_code, headers)
 
 class HTMLResponse(Response):
     def __init__(self, body, status_code: int = 200,
                  headers: list[tuple[bytes,bytes]] | None = None):
         body = str(body).encode("utf-8")
         headers = ResponseUtils.prepareHeaders(headers, (b"content-type", b"text/html"))
-        super().__init(body, status_code, headers)
+        super().__init__(body, status_code, headers)
 
 class ResponseUtils:
     @staticmethod

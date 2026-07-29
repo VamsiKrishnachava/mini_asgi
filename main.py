@@ -2,7 +2,7 @@ import json
 
 from mini_asgi.application import MiniASGI
 from mini_asgi.models.request import Request
-from mini_asgi.models.response import Response
+from mini_asgi.models.response import Response, JSONResponse
 
 app = MiniASGI()
 
@@ -24,12 +24,10 @@ def hello():
 async def json_tester(request: Request):
     body = await request.json()
     if request.query_params:
-        return json_response({
-            "message": (
-                f"The json is working correctly. The body.age = {body['age']} "
-                f"and params filter = {request.query_params.get('filter', 'Did not get any filter')}"
-            )
+        data = json.dumps({
+            "message": f"The json is working correctly. The body.age = {body['age']}"
         })
+        return JSONResponse(data)
     return json_response({"message": f"The json is working correctly. The body.age = {body['age']}"})
 
 
