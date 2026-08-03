@@ -40,3 +40,4 @@ The application will start on the default development server.
 - Sync endpoints can return data but should not call request.body() or request.json().
 - If an endpoint needs to read the request body, it should be async
 - Headers are all in lower case.
+- Path parameters are assumed to be strings for simplicity

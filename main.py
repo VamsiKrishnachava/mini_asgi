@@ -20,15 +20,20 @@ def hello():
     return json_response({"message": "Hello, World!"})
 
 
-@app.post("/json_tester")
-async def json_tester(request: Request):
+@app.post("/json_tester/{name}")
+async def json_tester(request: Request, name: str):
     body = await request.json()
     if request.query_params:
         data = json.dumps({
             "message": f"The json is working correctly. The body.age = {body['age']}"
         })
         return JSONResponse(data)
-    return json_response({"message": f"The json is working correctly. The body.age = {body['age']}"})
+    return json_response({
+        "message": (
+            f"The json is working correctly. The body.age = {body['age']}. "
+            f"The name is: {name}"
+        )
+    })
 
 
 @app.post("/users")

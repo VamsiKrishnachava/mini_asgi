@@ -1,4 +1,5 @@
 import inspect
+import re
 from mini_asgi.models.request import Request
 from mini_asgi.models.response import Response
 
@@ -6,7 +7,8 @@ from mini_asgi.models.response import Response
 class Route:
     def __init__(self, method, path, func):
         self._method = method
-        self._path = path
+        self._path = self._normalize_path(path)
+        self.path_parameters = self._extract_path_parameters(path)
         self.func = func
         try:
             self.expectedRequestParameter = self._ExpectedRequest(func)
@@ -21,6 +23,43 @@ class Route:
     @property
     def method(self):
         return self._method
+
+    def match_path(self, path):
+        if path is None:
+            return None
+
+        if not path.startswith("/"):
+            path = "/" + path
+
+        pattern_parts = [part for part in self._path.split("/") if part]
+        actual_parts = [part for part in path.split("/") if part]
+
+        if len(pattern_parts) != len(actual_parts):
+            return None
+
+        values = {}
+        for index, pattern_part in enumerate(pattern_parts):
+            actual_part = actual_parts[index]
+            normalized_actual_part = actual_part
+            if actual_part.startswith("{") and actual_part.endswith("}"):
+                normalized_actual_part = actual_part[1:-1]
+
+            if pattern_part == "{}":
+                values[self.path_parameters[len(values)]] = normalized_actual_part
+            elif pattern_part != actual_part:
+                return None
+
+        return values
+
+    def _normalize_path(self, path):
+        if path is None:
+            raise ValueError("Path must be provided.")
+        return re.sub(r"\{[^{}]+\}", "{}", path)
+
+    def _extract_path_parameters(self, path):
+        if path is None:
+            return []
+        return re.findall(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}", path)
 
     @property
     def isAsync(self):
