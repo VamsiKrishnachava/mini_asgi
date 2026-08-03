@@ -50,6 +50,9 @@ class MiniASGI:
         method = scope['method'].upper()
         route = self.routes.get((method, path))
         if not route:
+            route = self._find_route(method, path)
+
+        if not route:
             await self._send_header_helper(404, [(b'content-type', b'text/plain')], send)
             await self._send_body_helper(b"Route not found", send)
             return
@@ -68,7 +71,7 @@ class MiniASGI:
     def _registerRoute(self, route:Route):
             """
                 This fucntion helps in registering a route in the app. 
-            """
+            """    
             self.routes[(route.method, route.path)] = route
             return
 
@@ -85,11 +88,22 @@ class MiniASGI:
         if expectedRequestParameter:
             kwargs[expectedRequestParameter] = Request(scope, receive)
 
+        for name, value in (route.match_path(scope['path']) or {}).items():
+            kwargs[name] = value
+
         if route.isAsync:
             return await function(**kwargs)
         else: 
             return function(**kwargs)
                
+    def _find_route(self, method, path):
+        for (route_method, route_path), route in self.routes.items():
+            if route_method != method:
+                continue
+            if route.match_path(path) is not None:
+                return route
+        return None
+
     async def _send_header_helper(self, status, headers, send):
         """
         Helper method to send HTTP response headers.
