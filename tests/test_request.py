@@ -20,4 +20,4 @@ async def test_request_body():
 
     request = Request(scope, receive)
     body = await request.body()
-    assert body == b'{"name": "John1"}'
+    assert body == b'{"name": "John"}'
