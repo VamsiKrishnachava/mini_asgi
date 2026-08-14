@@ -72,7 +72,7 @@ class Route:
         functionParameters = inspect.signature(function).parameters
         returnParameter = None
         for parameter in functionParameters.values():
-            if parameter.annotation == Request:
+            if parameter.annotation == Request or parameter.name == "request":
                 if returnParameter is None:
                     returnParameter = parameter
                 else:
