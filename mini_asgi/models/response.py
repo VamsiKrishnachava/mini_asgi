@@ -34,16 +34,17 @@ class ResponseUtils:
     @staticmethod
     def prepareHeaders(headers: list[tuple[bytes,bytes]] | None = None, 
                         contentHeader :tuple[bytes,bytes] | None = None ) -> list[tuple[bytes,bytes]]:
-        if contentHeader is None:
-            return None
         returnHeaders = list(headers or [])
-        if not headers is None:
-            for header in headers:
-                if header[0].lower() == b"content-type":
-                    if header[1].lower() == contentHeader.value.lower():
-                        return returnHeaders
-                    else:
-                        raise ValueError("Content type is incorrect in headers.")
+        if contentHeader is None:
+            return returnHeaders
+
+        for header in returnHeaders:
+            if header[0].lower() == b"content-type":
+                if header[1].lower() == contentHeader[1].lower():
+                    return returnHeaders
+                else:
+                    raise ValueError("Content type is incorrect in headers.")
+
         returnHeaders.append(contentHeader)
         return returnHeaders
 
