@@ -43,7 +43,7 @@ class MiniASGI:
         for (method, path), func in router.routes.items():
             if (method, path) in self.routes:
                 raise ValueError(f"Route {method} {path} already exists in the main app.")
-            self.routes[(method, path)] = func
+            self._registerRoute(Route(method, path, func))
 
     async def __call__(self, scope, receive, send):
         path = scope['path']
@@ -80,6 +80,7 @@ class MiniASGI:
         function = route.func
         requestParameter = route.expectedRequestParameter
         expectedRequestParameter = requestParameter.name if requestParameter else None
+        
         
         # Instead of having multiple for different cases, 
         # we can build the arguments. 
