@@ -67,7 +67,6 @@ async def test_request_body(post_scope, request_factory, make_http_event):
     request = request_factory(post_scope, receive)
     body = await request.body()
     assert body == b'{"name": "John"}'
-<<<<<<< HEAD
 
 
 @pytest.mark.asyncio
@@ -159,5 +158,3 @@ async def test_request_json_cache(post_scope, request_factory, make_http_event):
     assert data == {"name": "John"}
     data = await request.json()
     assert calls == 1
-=======
->>>>>>> main
