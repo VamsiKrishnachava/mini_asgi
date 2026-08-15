@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mini-asgi"
+version = "0.1.0"
+description = "A lightweight ASGI web framework built from scratch in Python."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "Vamsi Krishna Chava" }
+]
+license = "MIT"
+
+[tool.hatch.build.targets.wheel]
+packages = ["mini_asgi"]
